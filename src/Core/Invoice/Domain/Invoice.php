@@ -5,6 +5,7 @@ namespace App\Core\Invoice\Domain;
 use App\Common\EventManager\EventsCollectorTrait;
 use App\Core\Invoice\Domain\Event\InvoiceCanceledEvent;
 use App\Core\Invoice\Domain\Event\InvoiceCreatedEvent;
+use App\Core\Invoice\Domain\Exception\CanNotCreateForInactiveUserException;
 use App\Core\Invoice\Domain\Exception\InvoiceException;
 use App\Core\Invoice\Domain\Status\InvoiceStatus;
 use App\Core\User\Domain\User;
@@ -47,6 +48,10 @@ class Invoice
      */
     public function __construct(User $user, int $amount)
     {
+        if (!$user->isActive()) {
+            throw new CanNotCreateForInactiveUserException('Can not create invoice for inactive user.');
+        }
+
         if ($amount <= 0) {
             throw new InvoiceException('Kwota faktury musi być większa od 0');
         }

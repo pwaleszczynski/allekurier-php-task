@@ -38,6 +38,7 @@ class CreateInvoiceHandlerTest extends TestCase
     public function test_handle_success(): void
     {
         $user = $this->createMock(User::class);
+        $user->method('isActive')->willReturn(true);
 
         $invoice = new Invoice(
             $user, 12500

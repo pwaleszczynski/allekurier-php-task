@@ -5,6 +5,7 @@ namespace App\Core\Invoice\Application\Command\CreateInvoice;
 use App\Core\Invoice\Domain\Invoice;
 use App\Core\Invoice\Domain\Repository\InvoiceRepositoryInterface;
 use App\Core\User\Domain\Repository\UserRepositoryInterface;
+use App\Core\User\Domain\ValueObject\Email;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -18,7 +19,7 @@ class CreateInvoiceHandler
     public function __invoke(CreateInvoiceCommand $command): void
     {
         $this->invoiceRepository->save(new Invoice(
-            $this->userRepository->getByEmail($command->email),
+            $this->userRepository->getByEmail(Email::fromString($command->email)),
             $command->amount
         ));
 
